@@ -11,5 +11,10 @@ from rest_framework.decorators import api_view
 
 @api_view()
 def products(request):
-    all_products = ProductSerializer(Product.objects.all(), many=True).data
+    search_str = request.GET.get('search')
+    all = Product.objects.all()
+    if search_str:
+        all = all.filter(name__contains=search_str)
+    all_products = ProductSerializer(all,many=True).data
     return Response(all_products)
+
