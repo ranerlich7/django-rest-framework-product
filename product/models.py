@@ -9,4 +9,6 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=16, decimal_places=2)
     stock = models.IntegerField(default=0)
 
+class Category(models.Model):
+    name = models.CharField(max_length=100, null=False)
 
