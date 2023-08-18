@@ -11,5 +11,6 @@ from rest_framework.decorators import api_view
 
 @api_view()
 def products(request):
-    all_products = ProductSerializer(Product.objects.all(), many=True).data
-    return Response(all_products)
+    all_products = Product.objects.all()
+    all_products_json = ProductSerializer(all_products, many=True).data
+    return Response(all_products_json)
