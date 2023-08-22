@@ -10,24 +10,22 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 
 
-@api_view()
+@api_view(['GET', 'POST'])
 def products(request):
-    search_str = request.GET.get('search')
-    all = Product.objects.all()
-    if search_str:
-        all = all.filter(name__contains=search_str)
-    all_products = ProductSerializer(all,many=True).data
-    return Response(all_products)
-
-@csrf_exempt
-@api_view(["POST"])
-def create_product(request):
-    data = JSONParser().parse(request)
-    serializer = ProductSerializer(data=data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=201)
-    return Response(serializer.errors, status=400)
+    if request.method == 'GET':
+        search_str = request.GET.get('search')
+        all = Product.objects.all()
+        if search_str:
+            all = all.filter(name__contains=search_str)
+        all_products = ProductSerializer(all,many=True).data
+        return Response(all_products)
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = ProductSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 @api_view()
