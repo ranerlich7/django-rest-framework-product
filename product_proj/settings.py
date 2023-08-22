@@ -30,6 +30,7 @@ ALLOWED_HOSTS = []
 
 CORS_ALLOW_ALL_ORIGINS = False  # Set to True to allow any origin (not recommended for production)
 CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5500",
     "http://127.0.0.1:5501",  # Replace with the origins allowed to access your server
 ]
 # Application definition
