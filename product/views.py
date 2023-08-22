@@ -24,31 +24,44 @@ def products(request):
         all_products_json = ProductSerializer(all_products, many=True).data
         return Response(all_products_json)
     elif request.method == 'POST':
-        # this line creates a serializer object from json data        
+        # this line creates a serializer object from json data
         serializer = ProductSerializer(data=request.data)
-        # this line checkes validity of json data 
+        # this line checkes validity of json data
         if serializer.is_valid():
             # the serializer.save - saves a new product object
             serializer.save()
             # returns the object that was created including id
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         # if not valid. return errors.
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
-        
-@api_view(['GET'])
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
 def product_detail(request, id):
     # get object from db by id
     try:
         product = Product.objects.get(pk=id)
     except Product.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)    
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    # GET
     if request.method == 'GET':
         # create serializer from object
         serializer = ProductSerializer(product)
         # return json using serializer
         return Response(serializer.data)
-
-        snippet = Snippet.objects.get(pk=pk)
+    # PUT
+    elif request.method == 'PUT':
+        serializer = ProductSerializer(product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # DELETE
+    elif request.method == 'DELETE':
+        # product.is_active = False
+        # product.save()
+        product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view()
@@ -59,5 +72,3 @@ def categories(request):
         all_categories = all_categories.filter(name__contains=search)
     all_categories_json = CategorySerializer(all_categories, many=True).data
     return Response(all_categories_json)
-    
-    
