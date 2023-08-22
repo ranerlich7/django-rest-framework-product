@@ -1,6 +1,4 @@
-from django.shortcuts import render
-
-# Create your views here.
+from rest_framework import status
 from django.shortcuts import render
 from .models import Category, Product
 from .serializers import ProductSerializer, CategorySerializer
@@ -10,45 +8,48 @@ from rest_framework.decorators import api_view
 from rest_framework.parsers import JSONParser
 
 
-@api_view()
-def products(request):        
-    search = request.GET.get('search')
-    maxprice = request.GET.get('maxprice')
-    all_products = Product.objects.all()
-    # search all product that name contains search parameter
-    if search:
-        all_products = all_products.filter(name__contains=search)
-    # search all product that price <= maxprice (price__lte=maxprice)
-    if maxprice:
-        all_products = all_products.filter(price__lte=maxprice)
+@api_view(['GET', 'POST'])
+def products(request):
+    if request.method == 'GET':
+        search = request.GET.get('search')
+        maxprice = request.GET.get('maxprice')
+        all_products = Product.objects.all()
+        # search all product that name contains search parameter
+        if search:
+            all_products = all_products.filter(name__contains=search)
+        # search all product that price <= maxprice (price__lte=maxprice)
+        if maxprice:
+            all_products = all_products.filter(price__lte=maxprice)
 
-    all_products_json = ProductSerializer(all_products, many=True).data
-    return Response(all_products_json)
+        all_products_json = ProductSerializer(all_products, many=True).data
+        return Response(all_products_json)
+    elif request.method == 'POST':
+        # this line creates a serializer object from json data        
+        serializer = ProductSerializer(data=request.data)
+        # this line checkes validity of json data 
+        if serializer.is_valid():
+            # the serializer.save - saves a new product object
+            serializer.save()
+            # returns the object that was created including id
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # if not valid. return errors.
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+        
+@api_view(['GET'])
+def product_detail(request, id):
+    # get object from db by id
+    try:
+        product = Product.objects.get(pk=id)
+    except Product.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)    
+    if request.method == 'GET':
+        # create serializer from object
+        serializer = ProductSerializer(product)
+        # return json using serializer
+        return Response(serializer.data)
 
+        snippet = Snippet.objects.get(pk=pk)
 
-"""
-in create_product we get a POST request containing a json
- {
-    "name": "Picture Frame",
-    "price": "29.00",
-    "stock": 150
-}
-"""
-@api_view(["POST"])
-def create_product(request):
-    # this line parses the json from request
-    data = JSONParser().parse(request)
-    # this line creates a serializer object from json data
-    serializer = ProductSerializer(data=data)
-    # this line checkes validity of json data 
-    if serializer.is_valid():
-        # the serializer.save - saves a new product object
-        serializer.save()
-        # returns the object that was created including id
-        return Response(serializer.data, status=201)
-    # if not valid. return errors.
-    return Response(serializer.errors, status=400)    
-    
 
 @api_view()
 def categories(request):
