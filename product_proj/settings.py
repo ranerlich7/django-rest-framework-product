@@ -28,7 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+CORS_ALLOW_ALL_ORIGINS = False  # Set to True to allow any origin (not recommended for production)
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5501",  # Replace with the origins allowed to access your server
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,11 +42,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'product',
-    'rest_framework'
+    'rest_framework',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
