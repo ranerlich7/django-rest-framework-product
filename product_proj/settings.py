@@ -21,7 +21,7 @@ AUTH_USER_MODEL = "product.MyUser"
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-csq+#ivj($6@7pb7x4u62+!2pv=nn@wyl!w4av^swkh6_&8afo'
+SECRET_KEY = 'django-insecure-csq+#ivj($6@7pb7x4u62+agfagas!w4av^swkh6_&8afo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -46,6 +46,12 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -11,15 +11,38 @@
 <body>
     <div class="row" id="productsRow">
     </div>
+    <form onSubmit="event.preventDefault(); login()" method="POST">
+        <input name="username" id="username">
+        <input name="password" type="password" id="password">
+        <input  type="submit" value="Login" />
+    </form>
+    <button onclick="getProducts()">Get Products</button>
 </body>
 <script>
-    console.log("!!!!")
+    function getProducts() {
+        console.log("!!!!")
     axios.get('http://127.0.0.1:8000/product').then(res => {
         console.log(res.data)
         const products = res.data
-        const resultHTML = products.map(product => `<li>${product.name}</li>`)
+        const resultHTML = products.map(product => `<li>${product.name}</li>`).join('')
         productsRow.innerHTML = resultHTML
     })
+        
+    }
+
+    function login(event) {
+        axios.post("http://127.0.0.1:8000/token/", {
+        username:username.value,
+        password: password.value
+      })
+      .then((response) => {
+        console.log(response);
+        // debugger;
+        localStorage.setItem('token', response.data.access)
+      });
+        
+    }
+
 </script>
 <!-- 
 // axios.get('https://news-api-test-1.onrender.com//article').then(res => {
@@ -39,4 +62,5 @@
 
 
     }) -->
+    
 </html>
