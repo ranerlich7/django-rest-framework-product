@@ -49,7 +49,7 @@
                 <a class="navbar-brand" href="#">Logo</a>
             </div>
             <div class="collapse navbar-collapse" id="myNavbar">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav" id="navbarContent">
                     <li class="active"><a href="#">Home</a></li>
                     <li><a href="#">Products</a></li>
                     <li><a href="#">Deals</a></li>
@@ -99,8 +99,12 @@
                 </div>
             </div>`).join('');
             articlerow.innerHTML = resultHTML;
-
-
+        });
+        axios.get('http://127.0.0.1:8000/category').then(res => {
+                console.log(res.data);
+            const categories = res.data;
+            const resultHTML = '<li class="active"><a href="#">Home</a></li>' + categories.map(category => `<li><a href="#">${category.name}</a></li>`).join('');
+            navbarContent.innerHTML = resultHTML;
         })
 
 
