@@ -4,11 +4,17 @@ from .models import Category, Product
 from .serializers import ProductSerializer, CategorySerializer
 # from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
-from rest_framework.parsers import JSONParser
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
+# def myorders()
 
 @api_view(['GET', 'POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
 def products(request):
     if request.method == 'GET':
         search = request.GET.get('search')
