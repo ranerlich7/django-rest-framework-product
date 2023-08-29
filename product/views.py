@@ -13,8 +13,8 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 # def myorders()
 
 @api_view(['GET', 'POST'])
-@authentication_classes([JWTAuthentication])
-@permission_classes([IsAuthenticated])
+# @authentication_classes([JWTAuthentication])
+# @permission_classes([IsAuthenticated])
 def products(request):
     if request.method == 'GET':
         search = request.GET.get('search')
