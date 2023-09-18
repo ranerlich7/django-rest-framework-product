@@ -19,6 +19,7 @@ def products(request):
     if request.method == 'GET':
         search = request.GET.get('search')
         maxprice = request.GET.get('maxprice')
+        category = request.GET.get('category')
         all_products = Product.objects.all()
         # search all product that name contains search parameter
         if search:
@@ -26,6 +27,8 @@ def products(request):
         # search all product that price <= maxprice (price__lte=maxprice)
         if maxprice:
             all_products = all_products.filter(price__lte=maxprice)
+        if category:
+            all_products = all_products.filter(category__id=category)
 
         all_products_json = ProductSerializer(all_products, many=True).data
         return Response(all_products_json)
