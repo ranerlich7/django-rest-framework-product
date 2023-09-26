@@ -11,7 +11,11 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 # @authentication_classes([JWTAuthentication])
 # @permission_classes([IsAuthenticated])
 # def myorders()
-
+@api_view(['GET', 'POST'])
+def cartitems(request):
+    # replace this with real cart items (you need a model, serializer, look at products for example)
+    return Response({'cart_items':[1,2,3]}) 
+    
 @api_view(['GET', 'POST'])
 # @authentication_classes([JWTAuthentication])
 # @permission_classes([IsAuthenticated])
